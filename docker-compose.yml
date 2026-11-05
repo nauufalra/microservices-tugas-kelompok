@@ -1,0 +1,22 @@
+services:
+  katalog-service:
+    build: ./katalog-service
+    ports: ["3001:3001"]
+  pelanggan-service:
+    build: ./pelanggan-service
+    ports: ["3002:3002"]
+  order-service:
+    build: ./order-service
+    ports: ["3003:3003"]
+  pembayaran-service:
+    build: ./pembayaran-service
+    ports: ["3004:3004"]
+  gateway:
+    build: ./gateway
+    ports: ["3000:3000"]
+    environment:
+      KATALOG_URL: http://katalog-service:3001
+      PELANGGAN_URL: http://pelanggan-service:3002
+      ORDER_URL: http://order-service:3003
+      PEMBAYARAN_URL: http://pembayaran-service:3004
+    depends_on: [katalog-service, pelanggan-service, order-service, pembayaran-service]

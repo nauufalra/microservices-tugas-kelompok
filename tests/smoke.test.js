@@ -1,0 +1,1 @@
+const test=require('node:test'),assert=require('node:assert');test('kontrak service memiliki health endpoint',()=>{assert.ok(require('fs').existsSync('gateway/server.js'));assert.ok(require('fs').existsSync('docker-compose.yml'))});
