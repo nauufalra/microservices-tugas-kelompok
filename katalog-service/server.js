@@ -1,0 +1,6 @@
+const express=require('express'); const app=express(); app.use(express.json());
+let products=[{id:'p1',name:'Kopi Arabika',category:'Minuman',price:25000,stock:20},{id:'p2',name:'Kaos Lokal',category:'Fashion',price:85000,stock:10},{id:'p3',name:'Keripik Pisang',category:'Makanan',price:18000,stock:30}];
+app.get('/health',(q,r)=>r.json({service:'katalog',status:'ok'})); app.get('/products',(q,r)=>{let x=products.filter(p=>!q.query.category||p.category===q.query.category);r.json(x)}); app.get('/products/:id',(q,r)=>{let p=products.find(x=>x.id===q.params.id);p?r.json(p):r.status(404).json({error:'Produk tidak ditemukan'})});
+app.post('/products',(q,r)=>{let p={id:'p'+(products.length+1),...q.body};products.push(p);r.status(201).json(p)});
+app.post('/products/:id/reserve',(q,r)=>{let p=products.find(x=>x.id===q.params.id),qty=Number(q.body.quantity||1);if(!p||p.stock<qty)return r.status(409).json({error:'Stok tidak cukup'});p.stock-=qty;r.json({reserved:true,product:p})});
+app.post('/products/:id/release',(q,r)=>{let p=products.find(x=>x.id===q.params.id);if(!p)return r.status(404).json({error:'Produk tidak ditemukan'});p.stock+=Number(q.body.quantity||1);r.json(p)}); app.listen(process.env.PORT||3001,()=>console.log('katalog 3001'));
